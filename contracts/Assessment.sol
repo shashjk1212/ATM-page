@@ -1,8 +1,6 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.9;
 
-//import "hardhat/console.sol";
-
 contract Assessment {
     address payable public owner;
     uint256 public balance;
@@ -15,7 +13,7 @@ contract Assessment {
         balance = initBalance;
     }
 
-    function getBalance() public view returns(uint256){
+    function getBalance() public view returns(uint256) {
         return balance;
     }
 
@@ -56,5 +54,21 @@ contract Assessment {
 
         // emit the event
         emit Withdraw(_withdrawAmount);
+    }
+
+    function calculateElssReturns(uint256 monthlyInvestment, uint256 investmentDuration, uint256 interestRate) public pure returns(uint256) {
+        uint256 totalMonths = investmentDuration * 12;
+        uint256 monthlyRate = interestRate / 12 / 100;
+        uint256 futureValue = monthlyInvestment * (((1 + monthlyRate) ** totalMonths - 1) / monthlyRate);
+        return futureValue;
+    }
+
+    function calculateTax(uint256 investmentReturns) public pure returns(uint256) {
+        if (investmentReturns > 100000) {
+            uint256 tax = investmentReturns * 10 / 100; // 10% tax on the entire return amount
+            return tax;
+        } else {
+            return 0; // No tax if returns are less than or equal to 100000
+        }
     }
 }
